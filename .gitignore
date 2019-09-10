@@ -5,4 +5,6 @@
 __pycache__
 .exercism
 venv/
-pkg
+go/pkg
+go/bin
+go/src
