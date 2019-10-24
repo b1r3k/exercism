@@ -1,20 +1,18 @@
 package isogram
 
-import "strings"
+import "unicode"
 
 // IsIsogram checks if string is isogram
-func IsIsogram(in string) bool {
+func IsIsogram(input string) bool {
 	counter := make(map[rune]int)
-	for _, char := range strings.ToUpper(in) {
-		if _, ok := counter[char]; ok {
-			counter[char]++
+	for _, char := range input {
+		upper := unicode.ToUpper(char)
+		if _, ok := counter[upper]; ok {
+			if unicode.IsLetter(upper) {
+				return false
+			}
 		} else {
-			counter[char] = 1
-		}
-	}
-	for char, count := range counter {
-		if count > 1 && char != ' ' && char != '-' {
-			return false
+			counter[upper] = 1
 		}
 	}
 	return true
