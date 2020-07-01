@@ -6,13 +6,14 @@ import "unicode"
 func IsIsogram(input string) bool {
 	counter := make(map[rune]int)
 	for _, char := range input {
+		if !unicode.IsLetter(char) {
+			continue
+		}
 		upper := unicode.ToUpper(char)
-		if _, ok := counter[upper]; ok {
-			if unicode.IsLetter(upper) {
-				return false
-			}
-		} else {
+		if _, ok := counter[upper]; !ok {
 			counter[upper] = 1
+		} else {
+			return false
 		}
 	}
 	return true
