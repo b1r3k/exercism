@@ -1,31 +1,45 @@
 import bisect
 
 
+class Student:
+    def __init__(self, name, grade):
+        self._name = name
+        self._grade = grade
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def grade(self):
+        return self._grade
+
+    def __lt__(self, other):
+        if self._grade < other.grade:
+            return True
+        if self._grade == other.grade and self._name < other.name:
+            return True
+
+    def __repr__(self):
+        return self.__str__()
+
+    def __str__(self):
+        return '{} {}'.format(self._grade, self._name)
+
+
 class School:
     def __init__(self):
         self._students = tuple()
 
-    def _get_grade_range(self, grade):
-        grades = [r[1] for r in self._students]
-        left_insort_idx = bisect.bisect_left(grades, grade)
-        right_insort_idx = bisect.bisect_right(grades, grade)
-        return left_insort_idx, right_insort_idx
-
     def add_student(self, name, grade):
-        left_insort_idx, right_insort_idx = self._get_grade_range(grade)
-        names = [r[0] for r in self._students]
+        student = Student(name, grade)
         students = list(self._students)
-        left_name_insort_idx = bisect.bisect_left(names, name, left_insort_idx, right_insort_idx)
-        students.insert(left_name_insort_idx, (name, grade))
+        bisect.insort(students, student)
         self._students = tuple(students)
 
     def roster(self):
-        r = []
-        for name, grade in self._students:
-            r.append(name)
-        return r
+        return [student.name for student in self._students]
 
     def grade(self, grade_number):
-        left_insort_idx, right_insort_idx = self._get_grade_range(grade_number)
-        students_in_grade = list(name for name, grade in self._students[left_insort_idx:right_insort_idx])
+        students_in_grade = list(student.name for student in self._students if student.grade == grade_number)
         return students_in_grade
